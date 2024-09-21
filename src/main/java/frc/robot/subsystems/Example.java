@@ -154,7 +154,9 @@ public class Example extends SubsystemBase {
       },
       
       // ** ON INTERRUPTED
-      interrupted-> {},
+      interrupted-> {
+        s0.set(0);
+      },
       
       // ** END CONDITION
       ()-> true,
