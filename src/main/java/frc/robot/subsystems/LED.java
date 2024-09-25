@@ -132,6 +132,13 @@ public Command setColor2(Color c) {
     this);
   }
 
+  public int testLED(int arg)
+  {
+    int i = 0;
+    i += arg;
+    return(i);
+  }
+
   @Override
   public void periodic() {
     //red();

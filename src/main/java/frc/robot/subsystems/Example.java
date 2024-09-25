@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 import java.util.function.DoubleSupplier;
 
@@ -136,8 +137,6 @@ public class Example extends SubsystemBase {
 
   }
 
-
-
   public Command servo_On(DoubleSupplier targetvalue)
   {
     return new FunctionalCommand(
@@ -192,15 +191,15 @@ public class Example extends SubsystemBase {
 
   }
 
-  private void testInit1()
+  public void testInit1()
   {
-    xButton.set(true);
   }
 
   private void testExecute1(double value)
   {
     xStick.set(value);
     maxcnt = (int) (50 - Math.abs(value) * 50);
+    RobotContainer.getLED().testLED(7);
     //cnt = 0;
   }
 

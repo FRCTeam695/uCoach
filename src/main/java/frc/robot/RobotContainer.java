@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Example m_example = new Example();
-  private final LED m_led = new LED();
+  private final LED m_led;
   private final DriveTrain m_drive = new DriveTrain();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -36,12 +36,15 @@ public class RobotContainer {
 
   private final Joystick joyleft = new Joystick(1);
   private final Joystick joyright = new Joystick(2);
+  private final Joystick joyextra = new Joystick(3);
   
 
   Trigger xButton;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    m_led = new LED();
 
     // Configure the trigger bindings
     configureBindings();
@@ -89,5 +92,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_example);
+  }
+
+  public static LED getLED()
+  {
+    return(m_led);
   }
 }
