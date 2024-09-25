@@ -37,6 +37,7 @@ public class RobotContainer {
   private final Joystick joyleft = new Joystick(1);
   private final Joystick joyright = new Joystick(2);
   private final Joystick joyextra = new Joystick(3);
+  private final Joystick joyextra2 = new Joystick(4);
   
 
   Trigger xButton;
@@ -94,8 +95,4 @@ public class RobotContainer {
     return Autos.exampleAuto(m_example);
   }
 
-  public static LED getLED()
-  {
-    return(m_led);
-  }
 }
