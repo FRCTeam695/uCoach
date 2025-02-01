@@ -4,18 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Example;
-import frc.robot.subsystems.LED;
-
-import edu.wpi.first.wpilibj.Joystick;
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,65 +16,42 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final Example m_example = new Example();
-  private final LED m_led;
-  private final DriveTrain m_drive = new DriveTrain();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  //private final CommandXboxController m_driverController =
-  //    new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  private final CommandXboxController Operator = new CommandXboxController(0);
 
-  private final Joystick joyleft = new Joystick(1);
-  private final Joystick joyright = new Joystick(2);
-  private final Joystick joyextra = new Joystick(3);
-  private final Joystick joyextra2 = new Joystick(4);
+
+public class RobotContainer
+{
+  private final Intake m_intake = new Intake();
+  private final CommandJoystick m_joystick = new CommandJoystick(0);
+  private final DoubleSupplier liftSpeed = () -> m_joystick.getRawAxis(1);
+  private final DoubleSupplier rollerSpeed = () -> m_joystick.getRawAxis(3);
   
-
-  Trigger xButton;
-  
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-
-    m_led = new LED();
-
-    // Configure the trigger bindings
+  public RobotContainer()
+  {
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
+  private void configureBindings()
+  {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_example::exampleCondition)
-        .onTrue(new ExampleCommand(m_example).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    //new Trigger(m_exampleSubsystem::exampleCondition);
 
+    m_joystick.button(1).whileTrue(m_intake.runLift(liftSpeed));
+    m_joystick.button(11).onTrue(m_intake.runRoller(rollerSpeed));
+    m_joystick.button(12).whileTrue(m_intake.releaseAlgae());
+
+    // m_driverController.b().onTrue(m_exampleSubsystem.LEDColors());
+    // m_exampleSubsystem.setDefaultCommand(m_exampleSubsystem.servoTurn());
+    // m_exampleSubsystem.setDefaultCommand(m_exampleSubsystem.motorTurn(leftYAxis));
+    // m_exampleSubsystem.setDefaultCommand(m_exampleSubsystem.TankDrive(rightYAxis,leftYAxis));
+   // pidcontroller.setDefaultCommand(pidcontroller.pidcontrolCommand());
+   //    m_driverController.b().whileTrue(pidcontroller.pidcontrolCommand());
+       // .onTrue(runOnce(() -> m_exampleSubsystem.PID(), m_exampleSubsystem));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    Operator.a().whileTrue(m_led.setColor2(LED.Color.GREEN));
-    Operator.b().whileTrue(m_led.setColor2(LED.Color.RED));
-    Operator.x().whileTrue(m_led.setColor2(LED.Color.BLUE));
-    
-    Operator.y().onTrue(
 
-        m_example.servo_On(() -> Operator.getRawAxis(0))
-        .andThen(new WaitCommand(2.0))
-        .andThen(m_example.servo_Off())
-      
-        );
 
-    m_drive.setDefaultCommand(m_drive.drive(()-> joyleft.getRawAxis(1), ()-> joyright.getRawAxis(1)));
 
   }
 
@@ -92,7 +62,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_example);
+    //return Autos.exampleAuto(m_exampleSubsystem);
+    return(null);
   }
-
 }
+
